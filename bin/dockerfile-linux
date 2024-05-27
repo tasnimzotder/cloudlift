@@ -1,0 +1,28 @@
+FROM centos:7
+
+# set working directory
+WORKDIR /app
+
+# install required packages
+RUN yum install -y \
+    make wget gcc openssl-devel bzip2-devel libffi-devel zlib-devel
+
+# download and extract python \
+RUN wget https://www.python.org/ftp/python/3.9.16/Python-3.9.16.tgz
+RUN tar xzf Python-3.9.16.tgz
+
+# install python
+RUN cd Python-3.9.16 && \
+    ./configure --enable-optimizations --prefix=/usr/local --enable-shared LDFLAGS="-Wl,-rpath /usr/local/lib" && \
+    make altinstall
+
+# create symbolic link for python3 \
+RUN ln -sf /usr/local/bin/python3.9 /usr/local/bin/python3
+
+# check python version
+RUN python3 -V
+
+# clean up
+RUN rm -rf Python-3.9.16.tgz Python-3.9.16
+
+CMD ["/bin/bash"]
