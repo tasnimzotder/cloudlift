@@ -3,6 +3,7 @@ name: Release
 on:
   push:
     branches:
+      - dev
       - master
     tags:
       - "v*.*.*"
@@ -19,7 +20,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.9'
+          python-version: "3.9"
 
       - name: Set Variables
         id: set_variables
@@ -80,7 +81,61 @@ jobs:
           name: "${{ env.package_name }}"
           path: "${{ github.workspace }}/dist/${{ env.package_name }}"
 
+  test:
+    runs-on: linux-test
+    needs:
+      - build-linux
 
+    steps:
+      - name: Set Images for Testing
+        run: |
+          images=(
+            "ubuntu:20.04"
+            "ubuntu:22.04"
+            "ubuntu:23.10"
+            "ubuntu:24.04"
+            "debian:12" # bookworm
+            "debian:11" # bullseye
+            "debian:10" # buster
+            "amazonlinux:2023"
+            "amazonlinux:2"
+            "amazonlinux:1"
+            "fedora:41"
+            "fedora:40"
+            "fedora:39"
+            "fedora:38"
+            "redhat/ubi8"
+          )
+          echo "images=${images[@]}" >> $GITHUB_ENV
+
+      - name: Get Linux Package Name
+        run: |
+          package_name=$(/bin/bash build.sh --package-name)
+          echo "Package Name: $package_name"
+          echo "package_name=$package_name" >> $GITHUB_ENV
+
+      - name: Download Linux Artifact
+        uses: actions/download-artifact@v4
+        with:
+          pattern: "${{ env.package_name }}"
+          path: "${{ github.workspace }}"
+
+      - name: Unpack Artifact
+        run: |
+          # unpack artifact on cloudlift directory
+          tar -xzf "${{ github.workspace }}/${{ env.package_name }}/${{ env.package_name }}" -C cloudlift --strip-components=1
+
+      - name: Run Tests
+        run: |
+          for image in "${{ env.images[@] }}"; do
+            docker_op=$(docker run --rm -v ${{ github.workspace }}/cloudlift:/cloudlift -w /cloudlift $image /bin/bash -c "./cloudlift --version")
+            echo "$image: $docker_op"
+
+            if [[ grep -q "${{ env.version }}" <<< "$docker_op" ]]; then
+              echo "Failed to run cloudlift on $image"
+              exit 1
+            fi
+          done
   release:
     if: github.ref == 'refs/tags/v*.*.*'
     runs-on: ubuntu-latest
