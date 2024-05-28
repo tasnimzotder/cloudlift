@@ -174,11 +174,18 @@ jobs:
       - name: Run Tests
         run: |
           for image in ${{ env.images[*] }}; do
-            docker_op=$(docker run --rm -v ${{ github.workspace }}/cloudlift:/cloudlift -w /cloudlift $image /bin/bash -c "./cloudlift --version")
+            echo "Testing on $image"
+            docker_op=$(docker run --rm -v ${{ github.workspace }}/cloudlift:/cloudlift -w /cloudlift "$image" /bin/bash -c "./cloudlift --version")
             echo "$image: $docker_op"
-            
+
             # remove docker image
-            docker rmi $image
+            docker rmi "$image"
+
+            # check if docker_op contains the version
+            # if [[ $docker_op != *"${{ env.version }}"* ]]; then
+            #   echo "Failed to run cloudlift on $image"
+            #   exit 1
+            # fi
           done
 
   release:
