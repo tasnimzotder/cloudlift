@@ -113,7 +113,7 @@ jobs:
 
       - name: Unpack Artifact
         run: |
-          tar -xzf "${{ github.workspace }}/${{ env.package_name }}/${{ env.package_name }}" -C cloudlift --strip-components=1
+          tar -xzf "${{ github.workspace }}/${{ env.package_name }}" -C cloudlift --strip-components=1
 
       - name: Run Tests
         run: |
@@ -164,13 +164,13 @@ jobs:
       - name: Download Linux Artifact
         uses: actions/download-artifact@v4
         with:
-          pattern: "${{ env.package_name }}"
+          name: "${{ env.package_name }}"
           path: "${{ github.workspace }}"
 
       - name: Unpack Artifact
         run: |
           # unpack artifact on cloudlift directory
-          tar -xzf "${{ github.workspace }}/${{ env.package_name }}/${{ env.package_name }}" -C cloudlift --strip-components=1
+          tar -xzf "${{ github.workspace }}/${{ env.package_name }}" -C cloudlift --strip-components=1
 
       - name: Run Tests
         run: |
