@@ -113,6 +113,7 @@ jobs:
 
       - name: Unpack Artifact
         run: |
+          mkdir -p cloudlift
           tar -xzf "${{ github.workspace }}/${{ env.package_name }}" -C cloudlift --strip-components=1
 
       - name: Run Tests
@@ -169,7 +170,7 @@ jobs:
 
       - name: Unpack Artifact
         run: |
-          # unpack artifact on cloudlift directory
+          mkdir -p cloudlift
           tar -xzf "${{ github.workspace }}/${{ env.package_name }}" -C cloudlift --strip-components=1
 
       - name: Run Tests
