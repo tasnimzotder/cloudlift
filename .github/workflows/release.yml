@@ -81,8 +81,30 @@ jobs:
           name: "${{ env.package_name }}"
           path: "${{ github.workspace }}/dist/${{ env.package_name }}"
 
+  # test-macos:
+  #   runs-on:
+  #     - macos-latest
+  #   needs: build-macos
+
+  #   steps:
+  #     - name: Get Package Name
+  #       run: |
+  #         package_name=$(/bin/bash build.sh --package-name)
+  #         echo "Package Name: $package_name"
+  #         echo "package_name=$package_name" >> $GITHUB_ENV
+        
+  #     - name: Download Artifact
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: "${{ env.package_name }}"
+  #         path: "${{ github.workspace }}"
+      
+  #     - name: Unpack Artifact
+  #       run: |
+  #         tar -xzf "${{ github.workspace }}/${{ env.package_name }}/${{ env.package_name }}" -C cloudlift --strip-components=1
+
   test-linux:
-    runs-on: linux-test
+    runs-on: ubuntu-latest
     needs:
       - build-linux
 
