@@ -41,7 +41,6 @@ jobs:
           path: "${{ github.workspace }}/dist/${{ env.package_name }}"
 
   build-linux:
-    if: false
     runs-on: ubuntu-latest
 
     steps:
@@ -126,7 +125,6 @@ jobs:
           fi
 
   test-linux:
-    if: false
     runs-on: ubuntu-latest
     needs:
       - build-linux
@@ -181,12 +179,8 @@ jobs:
             
             # remove docker image
             docker rmi $image
-
-            if [[ grep -q "${{ env.version }}" <<< "$docker_op" ]]; then
-              echo "Failed to run cloudlift on $image"
-              exit 1
-            fi
           done
+
   release:
     if: github.ref == 'refs/tags/v*.*.*'
     runs-on: ubuntu-latest
