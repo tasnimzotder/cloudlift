@@ -179,7 +179,7 @@ jobs:
           for image in "${image_array[@]}"; do
             echo "Testing on $image"
             docker_op=$(docker run --rm -v ${{ github.workspace }}/cloudlift:/cloudlift -w /cloudlift "$image" /bin/bash -c "./cloudlift --version")
-            echo "$image: $docker_op"
+            echo ">> $image: $docker_op"
 
             # remove docker image
             docker rmi "$image"

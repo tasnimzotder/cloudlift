@@ -378,6 +378,10 @@ preflight_check() {
     print_error "tar is required."
   fi
 
+  if ! command -v gzip >/dev/null; then
+    print_error "gzip is required."
+  fi
+
   # check if the package version is latest
   if [ "${PACKAGE_VERSION}" = "latest" ]; then
     get_latest_release
