@@ -119,6 +119,7 @@ build_package() {
       --add-data LICENSE:. \
       --add-data README.md:. \
       --add-binary /usr/lib64/libcrypt.so.1:. \
+      --add-binary /lib/ld-musl-x86_64.so.1:. \
       bin/cloudlift
   else
     pyinstaller \

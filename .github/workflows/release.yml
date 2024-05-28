@@ -2,8 +2,6 @@ name: Release
 
 on:
   push:
-    branches:
-      - master
     tags:
       - "v*.*.*"
 
@@ -53,8 +51,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           file: bin/dockerfile-linux
-          tags: centos7-py39:latest
-          load: true
+          tags: centos7-py39
 
       - name: Create Container
         run: |
@@ -185,12 +182,6 @@ jobs:
 
             # remove docker image
             docker rmi "$image"
-
-            # check if docker_op contains the version
-            # if [[ $docker_op != *"${{ env.version }}"* ]]; then
-            #   echo "Failed to run cloudlift on $image"
-            #   exit 1
-            # fi
           done
 
   release:
@@ -220,10 +211,6 @@ jobs:
             file=$(basename "$file")
             echo "$file: $sha" >> checksums.txt
           done
-
-      - name: Debug
-        run: |
-          ls -lah "${{ github.workspace }}"
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
