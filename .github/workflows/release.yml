@@ -173,7 +173,9 @@ jobs:
 
       - name: Run Tests
         run: |
-          for image in ${{ env.images[*] }}; do
+          IFS=' ' read -r -a image_array <<< "${{ env.images }}"
+
+          for image in "${image_array[@]}"; do
             echo "Testing on $image"
             docker_op=$(docker run --rm -v ${{ github.workspace }}/cloudlift:/cloudlift -w /cloudlift "$image" /bin/bash -c "./cloudlift --version")
             echo "$image: $docker_op"
