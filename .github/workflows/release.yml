@@ -53,7 +53,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           file: bin/dockerfile-linux
-          tags: centos7-py39
+          tags: docker.io/centos7-py39:latest
       # - name: Build Base Image (if not cached) # todo: move to separate job or use cache or upload to a docker registry
       #   run: |
       #     docker build \
