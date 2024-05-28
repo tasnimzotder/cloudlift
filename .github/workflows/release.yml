@@ -217,7 +217,7 @@ jobs:
 
       - name: Debug
         run: |
-          tree "${{ github.workspace }}"
+          ls -lah "${{ github.workspace }}"
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
