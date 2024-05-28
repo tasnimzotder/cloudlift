@@ -9,4 +9,3 @@ venv/
 metastore_db/
 .eggs
 .idea
-*.spec
